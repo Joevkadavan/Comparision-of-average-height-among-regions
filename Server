@@ -1,0 +1,37 @@
+server <- function(input, output){
+raw_data <- reactive({
+if(is.null(input$file1)){
+data.frame(Height=c(rnorm(50,170,7),rnorm(60,167,6),rnorm(45,172,6)),
+Region=rep(c('North','South','East'),c(50,60,45)))
+} else {
+read.csv(input$file1$datapath)
+}
+})
+
+
+output$col_select_ui <- renderUI({
+df <- raw_data()
+selectInput('height_col','Height column',names(df),names(df)[1])
+})
+
+
+data_clean <- reactive({
+df <- raw_data()
+df$Height <- as.numeric(df[[input$height_col]])
+df$Region <- as.factor(df[[2]])
+df
+})
+
+
+output$table <- renderDT({datatable(data_clean())})
+output$cis_table <- renderDT({datatable(group_cis(data_clean(),'Height','Region',1-input$alpha))})
+output$test_out <- renderPrint({
+dat <- data_clean()
+if(input$test_type=='anova') print(summary(aov(Height~Region,data=dat)) )
+else print(kruskal.test(Height~Region,data=dat))
+})
+output$box_plot <- renderPlotly({
+dat <- data_clean()
+ggplotly(ggplot(dat,aes(x=Region,y=Height))+geom_boxplot())
+})
+}
