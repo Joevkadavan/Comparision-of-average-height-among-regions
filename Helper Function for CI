@@ -1,0 +1,11 @@
+group_cis <- function(df, height_col, group_col, conf=0.95)
+{
+df %>% group_by(!!sym(group_col)) %>% 
+summarise(
+n=n(), mean=mean(!!sym(height_col)), sd=sd(!!sym(height_col))
+) %>% 
+mutate(
+se=sd/sqrt(n), tcrit=qt((1+conf)/2, df=n-1),
+lower=mean-tcrit*se, upper=mean+tcrit*se
+)
+}
