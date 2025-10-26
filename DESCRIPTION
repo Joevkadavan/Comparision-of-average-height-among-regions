@@ -1,0 +1,3 @@
+# This Shiny app allows users to upload a CSV with 'Height' and 'Region' columns.
+# Users can select a significance level and test type (ANOVA or Kruskal-Wallis).
+# The app computes group confidence intervals, shows test results, and displays an interactive
