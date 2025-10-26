@@ -1,0 +1,19 @@
+ui <- fluidPage(
+titlePanel("Height Comparison by Region"),
+sidebarLayout(
+sidebarPanel(
+fileInput('file1', 'Upload CSV'),
+uiOutput('col_select_ui'),
+numericInput('alpha', 'Significance level', 0.05, 0.001, 0.2, 0.005),
+selectInput('test_type', 'Test', c('ANOVA'='anova','Kruskal-Wallis'='kruskal'))
+),
+mainPanel(
+tabsetPanel(
+tabPanel('Data', DTOutput('table')),
+tabPanel('CIs', DTOutput('cis_table')),
+tabPanel('Test', verbatimTextOutput('test_out')),
+tabPanel('Plots', plotlyOutput('box_plot'))
+          )
+      )
+  )
+)
